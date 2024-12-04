@@ -1,0 +1,31 @@
+{% extends "register.html" %}
+
+{% block title %}Influencer Registration{% endblock %}
+
+
+{% block h1 %}<h1>Influencer Registration</h1>{% endblock %}
+{% block form2 %}
+
+{{ form.hidden_tag() }}
+<div class="mb-3">
+    <label for="name" class="form-label">{{ form.name.label }}</label>
+    {{ form.name(class="form-control", placeholder="Enter your name", id="name") }}
+</div>
+<div class="mb-3">
+    <label for="category" class="form-label">{{ form.category.label }}</label>
+    {{ form.category(class="form-control", placeholder="Enter your category", id="category") }}
+</div>
+<div class="mb-3">
+    <label for="niche" class="form-label">{{ form.niche.label }}</label>
+    {{ form.niche(class="form-control", placeholder="Enter your niche", id="niche") }}
+</div>
+<div class="mb-3">
+    <label for="total_followers" class="form-label">{{ form.total_followers.label }}</label>
+    {{ form.total_followers(class="form-control", placeholder="Enter total followers", id="total_followers") }}
+</div>
+<div class="mb-3">
+    <label for="active_followers" class="form-label">{{ form.active_followers.label }}</label>
+    {{ form.active_followers(class="form-control", placeholder="Enter active followers", id="active_followers") }}
+</div>
+<!-- <button type="submit" class="btn btn-primary">Submit</button> -->
+{% endblock %}

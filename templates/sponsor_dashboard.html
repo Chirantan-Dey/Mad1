@@ -1,0 +1,296 @@
+{% extends "base2.html" %}
+
+{% block title %}Sponsor Dashboard{% endblock %}
+
+{% block content %}
+
+<h1 class="mb-4">Sponsor Dashboard</h1>
+
+<div class="card">
+    <div class="card-header">
+        <h4>{{ sponsor.name }}</h4>
+    </div>
+    <div class="card-body">
+        <form method="post" action="{{ url_for('sponsor_dashboard') }}">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" value="{{ sponsor.name }}">
+            </div>
+            <div class="form-group">
+                <label for="industry">Company/Industry</label>
+                <input type="text" class="form-control" id="industry" name="industry" value="{{ sponsor.industry }}">
+            </div>
+            <div class="form-group">
+                <label for="budget">Budget</label>
+                <input type="number" class="form-control" id="budget" name="budget" value="{{ sponsor.budget }}">
+            </div>
+            <button type="submit" class="btn btn-primary" name="update_profile">Save Changes</button>
+        </form>
+    </div>
+</div>
+
+<hr>
+<form method="post" action="{{ url_for('sponsor_dashboard') }}" style="display:inline;">
+    <input type="text" class="form-control" name="search_query" placeholder="Search..." style="display:inline;">
+    <select class="form-control" name="search_filter" style="display:inline;">
+        <option value="name">Name</option>
+        <option value="category">Category</option>
+        <option value="total_followers">Total Followers</option>
+        <option value="active_followers">Active Followers</option>
+    </select>
+    <button type="submit" class="btn btn-primary" style="display:inline;">Search</button>
+</form>
+
+<ul class="list-group custom-border">
+    <h3>Search Results:</h3>
+    {% for influencer in influencers %}
+    <li class="list-group-item custom-border">
+        <strong>ID:</strong> {{ influencer.id }}<br>
+        <strong>Name:</strong> {{ influencer.name }}<br>
+        <strong>Category:</strong> {{ influencer.category }}<br>
+        <strong>Total Followers:</strong> {{ influencer.total_followers }}<br>
+        <strong>Active Followers:</strong> {{ influencer.active_followers }}<br>
+    </li>
+    {% endfor %}
+</ul>
+
+<br>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h2 style="display:inline;">Campaign Management</h2>
+        <button class="btn btn-primary float-right" data-toggle="modal" data-target="#createCampaignModal">Create New
+            Campaign</button>
+    </div>
+    <div class="card-body">
+        <ul class="list-group">
+            {% for campaign in campaigns %}
+            <li class="list-group-item custom-border">
+                <h5><strong>Campaign Name:</strong> {{ campaign.name }}</h5>
+                <p><strong>Description:</strong> {{ campaign.description }}</p>
+                <p><strong>Duration:</strong> {{ campaign.start_date }} to {{ campaign.end_date }}</p>
+                <p><strong>Budget:</strong> ${{ campaign.budget}}</p>
+                <p><strong>Goals:</strong> {{ campaign.goals }}</p>
+                <form method="post" action="{{ url_for('delete_campaign', campaign_id=campaign.id) }}"
+                    style="display:inline;">
+                    <button type="submit" class="btn btn-danger float-right">Delete</button>
+                </form>
+                <button class="btn btn-secondary float-right mr-2" data-toggle="modal"
+                    data-target="#updateCampaignModal{{ campaign.id }}">Update</button>
+                <hr class="bg-secondary">
+                <button class="btn btn-primary" data-toggle="modal"
+                    data-target="#createAdRequestModal{{ campaign.id }}">Create Ad Request</button>
+                <ul class="list-group mt-2">
+                    {% for ad in campaign.ads %}
+                    <li class="list-group-item  custom-back1 mt-2">
+                        <h6 style="display:inline;">Influencer Name: {{ ad.influencer.name }}</h6>
+                        <form method="post" action="{{ url_for('delete_ad_request', ad_id=ad.id) }}"
+                            style="display:inline;">
+                            <button type="submit" class="btn btn-danger float-right">Delete</button>
+                        </form>
+                        <button class="btn btn-secondary float-right mr-2" data-toggle="modal"
+                            data-target="#updateAdRequestModal{{ ad.id }}">Update</button>
+                        <p></p>
+                        <p><strong>Requirements:</strong> {{ ad.requirements }}</p>
+                        <p><strong>Payment Amount:</strong> ${{ ad.payment_amount }}</p>
+                        <p><strong>Status:</strong> {{ ad.status }}</p>
+                    </li>
+
+                    {% endfor %}
+                </ul>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<!-- Modals for creating and updating campaigns and ad requests -->
+{% for campaign in campaigns %}
+<!-- Create Ad Request Modal -->
+<div class="modal fade" id="createAdRequestModal{{ campaign.id }}" tabindex="-1" role="dialog"
+    aria-labelledby="createAdRequestModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createAdRequestModalLabel">Create Ad Request for {{ campaign.name }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" action="{{ url_for('create_ad_request', campaign_id=campaign.id) }}">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="influencer_id">Influencer</label>
+                        <select class="form-control" name="influencer_id" required>
+                            {% for influencer in influencer_data %}
+                            <option value="{{ influencer.id }}">{{ influencer.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="messages">Messages</label>
+                        <textarea class="form-control" name="messages" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="requirements">Requirements</label>
+                        <textarea class="form-control" name="requirements" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="payment_amount">Payment Amount</label>
+                        <input type="number" class="form-control" name="payment_amount" required>
+                    </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Create Ad Request</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Update Campaign Modal -->
+<div class="modal fade" id="updateCampaignModal{{ campaign.id }}" tabindex="-1" role="dialog"
+    aria-labelledby="updateCampaignModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateCampaignModalLabel">Update Campaign</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" action="{{ url_for('update_campaign', campaign_id=campaign.id) }}">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name">Campaign Name</label>
+                        <input type="text" class="form-control" name="name" value="{{ campaign.name }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <input type="text" class="form-control" name="description" value="{{ campaign.description }}"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label for="start_date">Start Date</label>
+                        <input type="date" class="form-control" name="start_date"
+                            value="{{ campaign.start_date.strftime('%d-%m-%Y') }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="end_date">End Date</label>
+                        <input type="date" class="form-control" name="end_date"
+                            value="{{ campaign.end_date.strftime('%d-%m-%Y') }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="budget">Budget</label>
+                        <input type="number" class="form-control" name="budget" value="{{ campaign.budget }}" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Update Campaign</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% for ad in campaign.ads %}
+<!-- Update Ad Request Modal -->
+<div class="modal fade" id="updateAdRequestModal{{ ad.id }}" tabindex="-1" role="dialog"
+    aria-labelledby="updateAdRequestModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateAdRequestModalLabel">Update Ad Request</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" action="{{ url_for('update_ad_request', ad_id=ad.id) }}">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="influencer_id">Influencer ID</label>
+                        <input type="number" class="form-control" name="influencer_id" value="{{ ad.influencer_id }}"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label for="requirements">Requirements</label>
+                        <textarea class="form-control" name="requirements" required>{{ ad.requirements }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="payment_amount">Payment Amount</label>
+                        <input type="number" class="form-control" name="payment_amount" value="{{ ad.payment_amount }}"
+                            required>
+                    </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Update Ad Request</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endfor %}
+
+<!-- Create Campaign Modal -->
+<div class="modal fade" id="createCampaignModal" tabindex="-1" role="dialog" aria-labelledby="createCampaignModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createCampaignModalLabel">Create New Campaign</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" action="{{ url_for('create_campaign') }}">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name">Campaign Name</label>
+                        <input type="text" class="form-control" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea class="form-control" name="description" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="start_date">Start Date</label>
+                        <input type="date" class="form-control" name="start_date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="end_date">End Date</label>
+                        <input type="date" class="form-control" name="end_date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="budget">Budget</label>
+                        <input type="number" class="form-control" name="budget" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="visibility">Visibility</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="visibility" id="visibility-public" value="public" checked>
+                            <label class="form-check-label" for="visibility-public">Public</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="visibility" id="visibility-private" value="private">
+                            <label class="form-check-label" for="visibility-private">Private</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="goals">Goals</label>
+                        <textarea class="form-control" name="goals" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Create Campaign</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+html, body {
+    background-color: #282828;
+    height: 100%;
+    margin: 0;
+}
+
+.container {
+    background-color: #282828;
+    margin-top: 20px;
+}
+
+.form-control {
+    width: 500px;
+}
+
+form {
+    /* Set a specific width for the form */
+    background-color: #ffffff;
+    width: 600px; /* Adjust as needed */
+    border-radius: 15px;
+}
+
+.form-heading {
+    text-align: center; /* Center the heading */
+    padding: 20px; /* Add padding around the heading */
+}
+
+.btn {
+    margin-top: 25px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.alert {
+    display: none; /* Hidden by default */
+}
+.alert:target {
+    display: block; /* Show when targeted */
+}
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}

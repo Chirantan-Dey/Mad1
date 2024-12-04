@@ -1,0 +1,172 @@
+{% extends "base2.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+
+<h1 class="mb-4">Admin Dashboard</h1>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h2 style="display:inline;">Sponsors
+            <h2 style="display:inline;" class="float-right">{{ total_users['sponsors'] }}</h2>
+    </div>
+    <div class="card-body">
+        <ul class="list-group">
+            {% for sponsor in sponsors %}
+            <li class="list-group-item custom-border">
+                <h5 style="display:inline;">{{ sponsor.name }}</h5>
+                <form method="post" action="{{ url_for('flag_sponsor', sponsor_id=sponsor.id) }}"
+                    style="display:inline;">
+                    <button type="submit" class="btn btn-link bg-dark float-right">{{ 'Unflag' if sponsor.flagged else
+                        'Flag' }}</button>
+                </form>
+                <hr class="bg-secondary">
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<!-- Influencers Section -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h2 style="display:inline;">Influencers</h2>
+        <h2 style="display:inline;" class="float-right">{{ total_users['influencers'] }}</h2>
+    </div>
+    <div class="card-body">
+        <ul class="list-group">
+            {% for influencer in influencers %}
+            <li class="list-group-item custom-border">
+                <h5 style="display:inline;">{{ influencer.name }}</h5>
+                <form method="post" action="{{ url_for('flag_influencer', influencer_id=influencer.id) }}"
+                    style="display:inline;">
+                    <button type="submit" class="btn btn-link bg-dark float-right">{{ 'Unflag' if influencer.flagged else 'Flag' }}</button>
+                </form>
+                <hr class="bg-secondary">
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h2 style="display:inline;">Campaigns</h2>
+        <h2 style="display:inline;" class="float-right">{{ influencer_data|length }}</h2>
+    </div>
+    <div class="card-body">
+        <ul class="list-group">
+            {% for item in influencer_data %}
+            <li class="list-group-item custom-border">
+                <h4 style="display:inline;">{{ item.campaign.name }} ({{ item.campaign.visibility }})</h4>
+                <ul class="list-group mt-2">
+                    {% for influencer_data in item.influencers %}
+                    <li class="list-group-item custom-border">
+                        <h5 style="display:inline;">{{ influencer_data.influencer.name }}</h5>
+                        <form method="post"
+                            action="{{ url_for('flag_influencer', influencer_id=influencer_data.influencer.id) }}"
+                            style="display:inline;">
+                            <button type="submit" class="btn btn-link bg-dark float-right">{{ 'Unflag' if
+                                influencer_data.influencer.flagged else 'Flag' }}</button>
+                        </form>
+                        <hr class="bg-secondary">
+                        <ul class="list-group mt-2">
+                            {% for ad in influencer_data.ads %}
+                            <li class="list-group-item" style="background-color: #333;">
+                                <strong>Messages:</strong> {{ ad.messages }}<br>
+                                <strong>Requirements:</strong> {{ ad.requirements }}<br>
+                                <strong>Payment Amount:</strong> ${{ ad.payment_amount }}<br>
+                                <strong>Status:</strong> {{ ad.status }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h2 style="display:inline;">Flagged Users
+            <h2 style="display:inline;" class="float-right">{{ flagged_sponsors + flagged_influencers }}</h2>
+    </div>
+    <div class="card-body">
+        <ul class="list-group">
+            <li class="list-group-item custom-border">
+                Flagged Sponsors: {{ flagged_sponsors }}
+                <ul class="list-group mt-2">
+                    {% for sponsor in sponsors if sponsor.flagged %}
+                    <li class="list-group-item" style="background-color: #333;">{{ sponsor.name }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+            <li class="list-group-item custom-border">
+                Flagged Influencers: {{ flagged_influencers }}
+                <ul class="list-group mt-2">
+                    {% for influencer in influencers if influencer.flagged %}
+                    <li class="list-group-item" style="background-color: #333;">{{ influencer.name }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h2>Charts</h2>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                <h3 class="text-center">Users</h3>
+                <a href="{{ users_chart_path }}" target="_blank">
+                    <img src="{{ users_chart_path }}" alt="Users Chart" style="width: 100%; height: auto;">
+                </a>
+            </div>
+            <div class="col-md-4">
+                <h3 class="text-center">Campaigns</h3>
+                <a href="{{ campaigns_chart_path }}" target="_blank">
+                    <img src="{{ campaigns_chart_path }}" alt="Campaigns Chart" style="width: 100%; height: auto;">
+                </a>
+            </div>
+            <div class="col-md-4">
+                <h3 class="text-center">Ads</h3>
+                <a href="{{ ads_chart_path }}" target="_blank">
+                    <img src="{{ ads_chart_path }}" alt="Ads Chart" style="width: 100%; height: auto;">
+                </a>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <h3 class="text-center">Flagged Users</h3>
+                <a href="{{ flagged_users_chart_path }}" target="_blank">
+                    <img src="{{ flagged_users_chart_path }}" alt="Flagged Users Chart"
+                        style="width: 100%; height: auto;">
+                </a>
+            </div>
+            <div class="col-md-4">
+                <h3 class="text-center">Flagged vs Unflagged Sponsors</h3>
+                <a href="{{ flagged_vs_unflagged_sponsors_chart_path }}" target="_blank">
+                    <img src="{{ flagged_vs_unflagged_sponsors_chart_path }}" alt="Flagged vs Unflagged Sponsors Chart"
+                        style="width: 100%; height: auto;">
+                </a>
+            </div>
+            <div class="col-md-4">
+                <h3 class="text-center">Flagged vs Unflagged Influencers</h3>
+                <a href="{{ flagged_vs_unflagged_influencers_chart_path }}" target="_blank">
+                    <img src="{{ flagged_vs_unflagged_influencers_chart_path }}"
+                        alt="Flagged vs Unflagged Influencers Chart" style="width: 100%; height: auto;">
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+
+{% block title %}{{'Welcome'|upper}}{% endblock %}
+
+
+{% block h1 %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+<div class="flashes">
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+<h5>BrandMatch</h5>
+<p>A Sponser-Influencer Hub</p>
+<br>
+<h1 class="display-1">Welcome</h1>
+
+<a href="{{ url_for('login') }}" class="btn btn-primary">Login</a>
+<a href="{{ url_for('register') }}" class="btn btn-primary">Register</a>
+{% endblock %}

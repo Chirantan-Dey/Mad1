@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+
+{% block h1 %}<h1>Login</h1>{% endblock %}
+
+{% block form %}
+
+{{ login_form.hidden_tag() }}
+
+<div class="mb-3">
+    <label for="user_type" class="form-label">{{ login_form.user_type.label }}</label><br>
+    {% for subfield in login_form.user_type %}
+    <div class="form-check form-check-inline">
+        {{ subfield(class="form-check-input", id="user_type_" + loop.index|string) }}
+        <label class="form-check-label" for="user_type_{{ loop.index }}">{{ subfield.label }}</label>
+    </div>
+    {% endfor %}
+</div>
+
+
+
+<div class="mb-3">
+    <label for="username" class="form-label">{{ login_form.username.label }}</label>
+    {{ login_form.username(class="form-control", placeholder="Enter your username", id="username") }}
+</div>
+<div class="mb-3">
+    <label for="password" class="form-label">{{ login_form.password.label }}</label>
+    {{ login_form.password(class="form-control", placeholder="Enter your password", id="password") }}
+</div>
+<button type="submit" class="btn btn-primary">Submit</button>
+
+
+{% endblock %}

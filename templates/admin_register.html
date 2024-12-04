@@ -1,0 +1,15 @@
+{% extends "register.html" %}
+
+{% block title %}Admin Registration{% endblock %}
+
+
+    
+{% block h1 %}<h1>Admin Registration</h1>{% endblock %}
+{% block form2 %}
+    {{ form.hidden_tag() }}
+    <div class="mb-3">
+        <label for="name" class="form-label">{{ form.name.label }}</label>
+        {{ form.name(class="form-control", placeholder="Enter your name", id="name") }}
+    </div>
+    
+{% endblock %}

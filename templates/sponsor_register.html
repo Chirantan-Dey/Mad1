@@ -1,0 +1,22 @@
+{% extends "register.html" %}
+
+{% block title %}Sponsor Registration{% endblock %}
+
+
+{% block h1 %}<h1>Sponsor Registration</h1>{% endblock %}
+{% block form2 %}
+
+{{ form.hidden_tag() }}
+<div class="mb-3">
+    <label for="name" class="form-label">{{ form.name.label }}</label>
+    {{ form.name(class="form-control", placeholder="Enter your name", id="name") }}
+</div>
+<div class="mb-3">
+    <label for="industry" class="form-label">{{ form.industry.label }}</label>
+    {{ form.industry(class="form-control", placeholder="Enter your industry", id="industry") }}
+</div>
+<div class="mb-3">
+    <label for="budget" class="form-label">{{ form.budget.label }}</label>
+    {{ form.budget(class="form-control", placeholder="Enter your budget", id="budget") }}
+</div>
+{% endblock %}

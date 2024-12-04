@@ -1,0 +1,111 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+ul {
+    list-style-type: none;
+}
+
+.form-control {
+    width: 500px;
+}
+
+form {
+    background-color: #333;
+    width: 600px; /* Adjust as needed */
+    border-radius: 15px;
+    margin-top: 10px;
+}
+
+.form-heading {
+    text-align: center; /* Center the heading */
+    padding: 20px; /* Add padding around the heading */
+}
+
+.card {
+    background-color: #ffffff;
+}
+
+body {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+.card {
+    background-color: #1e1e1e;
+    border-color: #333;
+}
+
+.card-header, .list-group-item {
+    background-color: #1e1e1e;
+    border-color: #333;
+}
+
+.chart-container {
+    background-color: #1e1e1e;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.chart-container canvas {
+    width: 300px !important;
+    height: 300px !important;
+    margin: 10px;
+}
+
+.modal-dialog {
+    max-width: 90%;
+}
+
+.modal-body canvas {
+    background-color: #1e1e1e;
+    width: 100% !important;
+    height: auto !important;
+}
+
+.modal-content {
+    background-color: #1e1e1e;
+}
+
+hr {
+    border-color: #333;
+}
+
+.custom-border {
+    border-color: #1e1e1e;
+    background-color: #1e1e1e; /* Example color */
+}
+
+.custom-back1 {
+    border-color: #1e1e1e;
+    background-color: #333;
+}
+
+/* Dropdown Specific Styles */
+.dropdown-menu {
+    display: none; /* Ensure dropdown is hidden by default */
+    background-color: #1e1e1e; /* Ensure background color matches theme */
+    border: 1px solid #333; /* Border color for visibility */
+    border-radius: 0.25rem; /* Match Bootstrap styling */
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); /* Box shadow for dropdown */
+}
+
+.dropdown-menu.show {
+    display: block; /* Show when the 'show' class is added */
+}
+
+.dropdown-menu a {
+    color: #e0e0e0; /* Ensure dropdown items have correct text color */
+}
+
+.dropdown-menu a:hover {
+    background-color: #333; /* Highlight on hover */
+}
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}

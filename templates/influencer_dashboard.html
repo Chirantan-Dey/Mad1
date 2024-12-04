@@ -1,0 +1,130 @@
+{% extends "base2.html" %}
+
+{% block title %}Influencer Dashboard{% endblock %}
+
+{% block content %}
+
+<h1 class="mb-4">Influencer Dashboard</h1>
+<div class="card">
+    <div class="card-header">
+        <h4>{{ influencers.name }}</h4>
+    </div>
+    <div class="card-body">
+        <form method="post" action="{{ url_for('influencer_dashboard') }}">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" value="{{ influencers.name }}">
+            </div>
+            <div class="form-group">
+                <label for="category">Category</label>
+                <input type="text" class="form-control" id="category" name="category" value="{{ influencers.category }}">
+            </div>
+            <div class="form-group">
+                <label for="total_followers">Total Followers</label>
+                <input type="number" class="form-control" id="total_followers" name="total_followers" value="{{ influencers.total_followers }}">
+            </div>
+            <div class="form-group">
+                <label for="active_followers">Active Followers</label>
+                <input type="number" class="form-control" id="active_followers" name="active_followers" value="{{ influencers.active_followers }}">
+            </div>
+            <div class="form-group">
+                <label for="niche">Niche</label>
+                <input type="text" class="form-control" id="niche" name="niche" value="{{ influencers.niche }}">
+            </div>
+            <button type="submit" class="btn btn-primary" name="update_profile">Save Changes</button>
+        </form>
+    </div>
+</div>
+
+
+<form method="post" action="{{ url_for('influencer_dashboard') }}" style="display:inline;">
+    <input type="text" class="form-control" name="search_query" placeholder="Search Campaigns..."
+        style="display:inline;">
+    <select class="form-control" name="search_filter" style="display:inline;">
+        <option value="" disabled selected>Filter</option>
+
+        <option value="budget">Budget</option>
+        <option value="goals">Goals</option>
+    </select>
+    <button type="submit" class="btn btn-primary" style="display:inline;">Search</button>
+</form>
+
+<ul class="list-group custom-border">
+    <h3>Search Results:</h3>
+    {% for campaign in campaigns_search %}
+    <li class="list-group-item">
+        <h5>{{ campaign.name }}</h5>
+        <strong>Start Date:</strong> {{ campaign.start_date }}<br>
+        <strong>End Date:</strong> {{ campaign.end_date }}<br>
+        <strong>Budget:</strong> {{ campaign.budget }}<br>
+        <strong>Goals:</strong> {{ campaign.goals }}<br>
+    </li>
+    {% endfor %}
+</ul>
+
+<div class="card mb-4">
+
+    <div class="card-body">
+        <ul class="list-group">
+            {% for item in influencer_data %}
+            <li class="list-group-item custom-border">
+
+                <h2 style="display:inline;">{{ item.influencer.name }}</h2>
+
+                <hr class="bg-secondary">
+
+                <ul class="list-group mt-2">
+                    {% for campaign_data in item.campaigns_with_ads %}
+                    <li class="list-group-item custom-border">
+
+                        <h4>{{ campaign_data.campaign.name }} ({{ campaign_data.campaign.start_date }}) - ({{
+                            campaign_data.campaign.end_date }})</h4>
+
+                        <ul class="list-group mt-2">
+                            {% for ad in campaign_data.ads %}
+                            <li class="list-group-item custom-back1">
+
+                                <strong>From Sponsor:</strong> {{ ad.sponsor.name }}<br>
+                                <strong>Messages:</strong> {{ ad.messages }}<br>
+                                <strong>Requirements:</strong> {{ ad.requirements }}<br>
+                                <strong>Payment Amount:</strong>
+
+                                <form method="post" action="{{ url_for('negotiate', ad_id=ad.id) }}"
+                                    style="display:inline;">
+                                    {% if edit_mode and ad.id == ad_id|int %}
+                                    <input type="text" name="amt" id="amt" value="{{ ad.payment_amount }}">
+                                    <button type="submit" name="action" value="submit" class="btn btn-link bg-dark"
+                                        style="display:inline;">Submit</button>
+                                    {% else %}
+                                    ${{ ad.payment_amount }}
+                                    <button type="submit" name="action" value="negotiate" class="btn btn-link bg-dark"
+                                        style="display:inline;">Negotiate</button>
+                                    {% endif %}
+                                </form>
+                                <br>
+                                <strong>Status:</strong> {{ ad.status }}
+                                <br>
+                                <form method="post" action="{{ url_for('ad_status', ad_id=ad.id) }}">
+                                    <button type="submit" name="ad" value="Pending" class="btn btn-warning"
+                                        style="display:inline;">Pending</button>
+                                    <button type="submit" name="ad" value="Approved" class="btn btn-success"
+                                        style="display:inline;">Approved</button>
+                                    <button type="submit" name="ad" value="Completed" class="btn btn-danger"
+                                        style="display:inline;">Completed</button>
+                                </form>
+                            </li>
+
+
+
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    {% endfor %}
+                </ul>
+
+                {% endfor %}
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
